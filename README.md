@@ -105,6 +105,30 @@ To regenerate after updating the binary:
 pwf completion zsh > /opt/homebrew/share/zsh/site-functions/_pwf
 ```
 
+## Installation
+
+Download the latest binary for your platform from the Bitbucket downloads page, then:
+
+```sh
+# macOS / Linux
+chmod +x pwf_darwin_arm64/pwf   # or pwf_linux_amd64/pwf etc.
+mv pwf /usr/local/bin/pwf
+```
+
+Run `pwf init` after installing.
+
+## Releasing
+
+Requires [goreleaser](https://goreleaser.com) and a `GITHUB_TOKEN` (or equivalent) with repo access.
+
+```sh
+git tag v1.2.3
+git push origin v1.2.3
+goreleaser release --clean
+```
+
+Produces archives + checksums in `dist/` for: macOS (arm64, amd64), Linux (arm64, amd64), Windows (amd64).
+
 ## Development
 
 ```sh
