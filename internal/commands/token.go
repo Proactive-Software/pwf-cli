@@ -86,7 +86,7 @@ func copyToClipboard(s string) error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-	fmt.Fprint(pipe, s)
-	pipe.Close()
+	_, _ = fmt.Fprint(pipe, s)
+	_ = pipe.Close()
 	return cmd.Wait()
 }

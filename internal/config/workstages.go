@@ -39,7 +39,7 @@ func (ws *Workstages) Save() error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	return toml.NewEncoder(f).Encode(ws)
 }
 

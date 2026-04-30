@@ -63,7 +63,7 @@ func installZsh() error {
 	if err != nil {
 		return fmt.Errorf("create %s: %w", dest, err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	if err := Root.GenZshCompletion(f); err != nil {
 		return err
 	}
@@ -97,7 +97,7 @@ func installBash() error {
 	if err != nil {
 		return fmt.Errorf("create %s: %w", dest, err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	if err := Root.GenBashCompletion(f); err != nil {
 		return err
 	}
@@ -117,7 +117,7 @@ func installFish() error {
 	if err != nil {
 		return fmt.Errorf("create %s: %w", dest, err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	if err := Root.GenFishCompletion(f, true); err != nil {
 		return err
 	}

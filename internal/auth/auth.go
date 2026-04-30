@@ -34,71 +34,6 @@ type tokenResponse struct {
 	ErrorDesc    string `json:"error_description"`
 }
 
-// Login runs the browser-based authorization code flow and returns tokens.
-func Login(clientID, clientSecret string) (*Tokens, error) {
-	state, err := randomHex(16)
-	if err != nil {
-		return nil, fmt.Errorf("generate state: %w", err)
-	}
-
-	redirectURI := fmt.Sprintf("http://localhost:%s%s", CallbackPort, CallbackPath)
-
-	codeCh := make(chan string, 1)
-	errCh := make(chan error, 1)
-
-	mux := http.NewServeMux()
-	srv := &http.Server{Handler: mux}
-
-	mux.HandleFunc(CallbackPath, func(w http.ResponseWriter, r *http.Request) {
-		q := r.URL.Query()
-		if q.Get("state") != state {
-			http.Error(w, "invalid state", http.StatusBadRequest)
-			errCh <- fmt.Errorf("state mismatch — possible CSRF")
-			return
-		}
-		code := q.Get("code")
-		if code == "" {
-			http.Error(w, "missing code", http.StatusBadRequest)
-			errCh <- fmt.Errorf("no code in callback")
-			return
-		}
-		fmt.Fprintln(w, "<html><body><p>Login successful. You can close this tab.</p></body></html>")
-		codeCh <- code
-	})
-
-	ln, err := net.Listen("tcp", ":"+CallbackPort)
-	if err != nil {
-		return nil, fmt.Errorf("listen on port %s: %w", CallbackPort, err)
-	}
-
-	go func() {
-		if err := srv.Serve(ln); err != nil && err != http.ErrServerClosed {
-			errCh <- err
-		}
-	}()
-	defer srv.Shutdown(context.Background())
-
-	authURL := fmt.Sprintf(
-		"%s/auth?client_id=%s&redirect_uri=%s&response_type=code&state=%s&scope=openid%%20email",
-		IdentityBase,
-		url.QueryEscape(clientID),
-		url.QueryEscape(redirectURI),
-		state,
-	)
-
-	fmt.Printf("Opening browser for login...\nIf it doesn't open, visit:\n%s\n", authURL)
-	openBrowser(authURL)
-
-	select {
-	case code := <-codeCh:
-		return exchangeCode(clientID, clientSecret, code, redirectURI)
-	case err := <-errCh:
-		return nil, err
-	case <-time.After(5 * time.Minute):
-		return nil, fmt.Errorf("login timed out after 5 minutes")
-	}
-}
-
 // Refresh exchanges a refresh token for a new access token.
 func Refresh(clientID, clientSecret, refreshToken string) (*Tokens, error) {
 	form := url.Values{
@@ -126,7 +61,7 @@ func postToken(form url.Values, existingRefresh string) (*Tokens, error) {
 	if err != nil {
 		return nil, fmt.Errorf("token request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	raw, _ := io.ReadAll(resp.Body)
 	var tr tokenResponse
@@ -157,21 +92,7 @@ func postToken(form url.Values, existingRefresh string) (*Tokens, error) {
 	}, nil
 }
 
-func randomHex(n int) (string, error) {
-	b := make([]byte, n)
-	if _, err := rand.Read(b); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(b), nil
-}
-
-func openBrowser(u string) {
-	// pkg/browser is already a dependency; import via indirect to avoid cycle.
-	// We shell out to avoid importing pkg/browser here — commands package does it.
-	_ = u
-}
-
-// BuildAuthURL returns the authorization URL (for callers that open the browser).
+// BuildAuthURL returns the authorization URL.
 func BuildAuthURL(clientID, redirectURI, state string) string {
 	return fmt.Sprintf(
 		"%s/auth?client_id=%s&redirect_uri=%s&response_type=code&state=%s&scope=openid%%20email",
@@ -182,7 +103,7 @@ func BuildAuthURL(clientID, redirectURI, state string) string {
 	)
 }
 
-// LoginWithBrowserOpener runs the flow, calling openFn to open the browser.
+// LoginWithBrowserOpener runs the OAuth authorization code flow, calling openFn to open the browser.
 func LoginWithBrowserOpener(clientID, clientSecret string, openFn func(string) error) (*Tokens, error) {
 	state, err := randomHex(16)
 	if err != nil {
@@ -218,7 +139,7 @@ func LoginWithBrowserOpener(clientID, clientSecret string, openFn func(string) e
 			return
 		}
 		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprintln(w, "<html><body style='font-family:sans-serif;padding:2rem'><h2>Login successful</h2><p>You can close this tab.</p></body></html>")
+		_, _ = fmt.Fprintln(w, "<html><body style='font-family:sans-serif;padding:2rem'><h2>Login successful</h2><p>You can close this tab.</p></body></html>")
 		codeCh <- code
 	})
 
@@ -235,7 +156,7 @@ func LoginWithBrowserOpener(clientID, clientSecret string, openFn func(string) e
 			}
 		}
 	}()
-	defer srv.Shutdown(context.Background())
+	defer func() { _ = srv.Shutdown(context.Background()) }()
 
 	if err := openFn(authURL); err != nil {
 		fmt.Printf("Could not open browser automatically.\nVisit: %s\n", authURL)
@@ -256,7 +177,7 @@ func (t *Tokens) IsExpired() bool {
 	return time.Now().After(t.ExpiresAt.Add(-30 * time.Second))
 }
 
-// MarshalJSON encodes Tokens as JSON for storage.
+// Marshal encodes Tokens as a JSON string for storage.
 func (t *Tokens) Marshal() (string, error) {
 	b, err := json.Marshal(t)
 	if err != nil {
@@ -274,9 +195,17 @@ func UnmarshalTokens(s string) (*Tokens, error) {
 	// Legacy: plain JWT string stored directly (no JSON structure)
 	if t.AccessToken == "" && !strings.HasPrefix(s, "{") {
 		return &Tokens{
-			AccessToken:  s,
-			ExpiresAt:    time.Time{}, // zero = treat as expired
+			AccessToken: s,
+			ExpiresAt:   time.Time{}, // zero = treat as expired
 		}, nil
 	}
 	return &t, nil
+}
+
+func randomHex(n int) (string, error) {
+	b := make([]byte, n)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(b), nil
 }

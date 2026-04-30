@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"bitbucket.org/proworkflow/pwf-cli/internal/api"
 	"bitbucket.org/proworkflow/pwf-cli/internal/config"
 	"bitbucket.org/proworkflow/pwf-cli/internal/picker"
 	"bitbucket.org/proworkflow/pwf-cli/internal/state"
@@ -100,14 +99,4 @@ and the git commit hook work instantly without extra API calls.`,
 
 func init() {
 	startCmd.Flags().BoolVar(&startOpen, "open", false, "Open in browser after selecting")
-}
-
-// findItem returns the matching item from a list by ID.
-func findItem(items []api.Item, id int) *api.Item {
-	for i := range items {
-		if items[i].ID == id {
-			return &items[i]
-		}
-	}
-	return nil
 }
