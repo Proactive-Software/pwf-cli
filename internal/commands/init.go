@@ -34,7 +34,7 @@ var initCmd = &cobra.Command{
 			appBase = "https://app.proworkflow.com"
 		}
 
-		fmt.Print("Account subdomain (e.g. thom_adv): ")
+		fmt.Print("Account subdomain (e.g. pwfdevwork): ")
 		subdomain, _ := r.ReadString('\n')
 		subdomain = strings.TrimSpace(subdomain)
 

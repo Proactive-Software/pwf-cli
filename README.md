@@ -56,7 +56,7 @@ oauth_client_secret = "your-client-secret"
 
 ## Auth
 
-Uses OAuth 2.0 authorization code flow via `https://identity-dev.proworkflow.com`.
+Uses OAuth 2.0 authorization code flow via `https://identity.proworkflow.com`.
 
 `pwf init` opens a browser, you log in, and the CLI receives an access token + refresh token via a local callback server on `localhost:9876`. Access tokens expire after 5 minutes — the CLI refreshes them automatically on each command. Refresh tokens last 14 days.
 

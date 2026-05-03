@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	IdentityBase = "https://identity-dev.proworkflow.com"
+	IdentityBase = "https://identity.proworkflow.com"
 	CallbackPort = "9876"
 	CallbackPath = "/callback"
 )
