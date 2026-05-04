@@ -5,7 +5,7 @@
 Thumbs.db
 
 # Go build output
-pwf
+/pwf
 *.exe
 
 # goreleaser output
