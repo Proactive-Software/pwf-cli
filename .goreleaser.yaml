@@ -5,7 +5,8 @@ before:
     - go mod tidy
 
 builds:
-  - main: ./cmd/pwf
+  - main: .
+    dir: cmd/pwf
     binary: pwf
     goos:
       - darwin
