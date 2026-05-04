@@ -7,6 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/Proactive-Software/pwf-cli/internal/api"
+	"github.com/Proactive-Software/pwf-cli/internal/config"
 	"github.com/Proactive-Software/pwf-cli/internal/picker"
 	"github.com/Proactive-Software/pwf-cli/internal/state"
 )
@@ -90,9 +91,20 @@ The item is assigned to you automatically.`,
 		}
 
 		title := args[0]
-		detail, err := client.CreateItem(a.ProjectID, phaseID, int(contactID), title)
+		created, err := client.CreateItem(a.ProjectID, phaseID, int(contactID), title)
 		if err != nil {
 			return fmt.Errorf("create item: %w", err)
+		}
+
+		detail, err := client.GetItem(created.ID)
+		if err != nil {
+			return fmt.Errorf("fetch created item: %w", err)
+		}
+
+		ws, _ := config.LoadWorkstages()
+		stage := ws.Name(detail.WorkstageID)
+		if stage == "" {
+			stage = fmt.Sprintf("stage:%d", detail.WorkstageID)
 		}
 
 		code := detail.Code
@@ -100,7 +112,11 @@ The item is assigned to you automatically.`,
 			code = fmt.Sprintf("#%d", detail.ID)
 		}
 		fmt.Printf("Created: %s  %s\n", codeStyle.Render(code), titleStyle.Render(detail.Name))
-		fmt.Printf("   %s · %s\n", projectStyle.Render(a.ProjectName), phaseStyle.Render(phaseName))
+		fmt.Printf("   %s · %s · %s\n", projectStyle.Render(a.ProjectName), phaseStyle.Render(phaseName), phaseStyle.Render(stage))
+		if detail.UniqueToken != "" {
+			fmt.Printf("   token: %s\n", detail.UniqueToken)
+		}
+		fmt.Printf("   hint: pwf start to set as active\n")
 		return nil
 	},
 }
