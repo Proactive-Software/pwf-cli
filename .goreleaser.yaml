@@ -32,6 +32,25 @@ archives:
 checksum:
   name_template: "checksums.txt"
 
+release:
+  github:
+    owner: Proactive-Software
+    name: pwf-cli
+
+brews:
+  - name: pwf
+    repository:
+      owner: Proactive-Software
+      name: homebrew-pwf-cli
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/Proactive-Software/pwf-cli"
+    description: "Personal ProWorkflow CLI"
+    license: "MIT"
+    install: |
+      bin.install "pwf"
+    test: |
+      system "#{bin}/pwf", "--help"
+
 changelog:
   sort: asc
   filters:

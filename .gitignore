@@ -7,3 +7,9 @@ Thumbs.db
 # Go build output
 pwf
 *.exe
+
+# goreleaser output
+dist/
+
+# Claude Code local config (may contain API keys)
+.claude/
