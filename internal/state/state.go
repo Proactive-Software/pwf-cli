@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"bitbucket.org/proworkflow/pwf-cli/internal/config"
+	"github.com/Proactive-Software/pwf-cli/internal/config"
 )
 
 // ActiveItem is persisted to ~/.config/pwf/active.json

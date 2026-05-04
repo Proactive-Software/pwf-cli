@@ -3,10 +3,10 @@ package commands
 import (
 	"fmt"
 
-	"bitbucket.org/proworkflow/pwf-cli/internal/api"
-	"bitbucket.org/proworkflow/pwf-cli/internal/auth"
-	"bitbucket.org/proworkflow/pwf-cli/internal/config"
-	"bitbucket.org/proworkflow/pwf-cli/internal/keyring"
+	"github.com/Proactive-Software/pwf-cli/internal/api"
+	"github.com/Proactive-Software/pwf-cli/internal/auth"
+	"github.com/Proactive-Software/pwf-cli/internal/config"
+	"github.com/Proactive-Software/pwf-cli/internal/keyring"
 )
 
 func newClient() (*api.Client, error) {

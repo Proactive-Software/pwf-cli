@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"bitbucket.org/proworkflow/pwf-cli/internal/config"
-	"bitbucket.org/proworkflow/pwf-cli/internal/picker"
-	"bitbucket.org/proworkflow/pwf-cli/internal/state"
+	"github.com/Proactive-Software/pwf-cli/internal/config"
+	"github.com/Proactive-Software/pwf-cli/internal/picker"
+	"github.com/Proactive-Software/pwf-cli/internal/state"
 )
 
 var startOpen bool

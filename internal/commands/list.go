@@ -5,8 +5,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
-	"bitbucket.org/proworkflow/pwf-cli/internal/api"
-	"bitbucket.org/proworkflow/pwf-cli/internal/config"
+	"github.com/Proactive-Software/pwf-cli/internal/api"
+	"github.com/Proactive-Software/pwf-cli/internal/config"
 )
 
 var (

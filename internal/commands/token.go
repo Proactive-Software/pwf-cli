@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
-	"bitbucket.org/proworkflow/pwf-cli/internal/state"
+	"github.com/Proactive-Software/pwf-cli/internal/state"
 )
 
 var tokenCmd = &cobra.Command{

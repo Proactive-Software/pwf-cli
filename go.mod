@@ -1,4 +1,4 @@
-module bitbucket.org/proworkflow/pwf-cli
+module github.com/Proactive-Software/pwf-cli
 
 go 1.24.0
 
