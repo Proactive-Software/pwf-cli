@@ -20,6 +20,7 @@ type Item struct {
 	ID      int
 	Display string // shown in list
 	Sub     string // shown as subtitle
+	Extra   string // hidden, searched but not displayed
 }
 
 type model struct {
@@ -83,7 +84,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.refilter()
 			}
 		default:
-			if len(msg.Runes) == 1 {
+			if len(msg.Runes) > 0 {
 				m.query += string(msg.Runes)
 				m.refilter()
 			}
@@ -103,7 +104,8 @@ func (m *model) refilter() {
 	var out []Item
 	for _, it := range m.items {
 		if strings.Contains(strings.ToLower(it.Display), q) ||
-			strings.Contains(strings.ToLower(it.Sub), q) {
+			strings.Contains(strings.ToLower(it.Sub), q) ||
+			strings.Contains(strings.ToLower(it.Extra), q) {
 			out = append(out, it)
 		}
 	}

@@ -110,7 +110,7 @@ func (c *Client) MyItems() ([]Item, error) {
 	params := url.Values{
 		"contacts":   {"me"},
 		"status":     {"active"},
-		"fields":     {"name,code,phasename,project,workstageid,priority,dates"},
+		"fields":     {"name,code,phasename,project,workstageid,priority,dates,uniquetoken"},
 		"pagesize":   {"100"},
 		"pagenumber": {"1"},
 	}

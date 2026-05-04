@@ -52,6 +52,7 @@ and the git commit hook work instantly without extra API calls.`,
 				ID:      it.ID,
 				Display: fmt.Sprintf("%s  %s", code, it.Name),
 				Sub:     fmt.Sprintf("%s · %s · %s", it.ProjectTitle, it.PhaseName, stage),
+				Extra:   it.UniqueToken,
 			}
 		}
 

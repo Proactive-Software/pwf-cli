@@ -12,6 +12,7 @@ type Item struct {
 	ID           int           `json:"id"`
 	Name         string        `json:"name"`
 	Code         string        `json:"code"`
+	UniqueToken  string        `json:"uniquetoken"`
 	ProjectID    int           `json:"projectid"`
 	ProjectTitle string        `json:"projecttitle"`
 	PhaseName    string        `json:"phasename"`
