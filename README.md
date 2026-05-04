@@ -14,6 +14,7 @@ pwf stage <name>         # move active item to a workstage (fuzzy matched)
 pwf open [id] [--project]  # open active item in browser; --project opens its project
 pwf token [id]           # print uniqueToken + copy to clipboard
 pwf new "<title>"        # create item in active item's project & phase
+pwf desc                 # show active item's description (rendered)
 pwf sync                 # pull latest workstages from API
 pwf init                 # one-time setup (OAuth login)
 ```

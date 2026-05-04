@@ -197,7 +197,7 @@ func (c *Client) AssignContact(itemID, contactID int) error {
 	})
 }
 
-// GetItem fetches a single item by ID (includes uniquetoken).
+// GetItem fetches a single item by ID.
 func (c *Client) GetItem(id int) (*ItemDetail, error) {
 	var env singleEnvelope[ItemDetail]
 	if err := c.get(fmt.Sprintf("/projectitems/%d", id), nil, &env); err != nil {
@@ -206,6 +206,7 @@ func (c *Client) GetItem(id int) (*ItemDetail, error) {
 	unescapeDetail(&env.Data)
 	return &env.Data, nil
 }
+
 
 // SetWorkstage updates the active workstage for an item.
 func (c *Client) SetWorkstage(itemID, workstageID int) error {

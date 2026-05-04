@@ -31,6 +31,7 @@ type ItemDetail struct {
 	PhaseName         string `json:"phasename"`
 	ItemCollectionID  int    `json:"itemcollectionid"`
 	WorkstageID       int    `json:"activeworkstageid"`
+	Description       string `json:"description"`
 	Contacts          []struct {
 		ID        int    `json:"id"`
 		FirstName string `json:"firstname"`
