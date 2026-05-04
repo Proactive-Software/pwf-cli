@@ -1,14 +1,22 @@
 package api
 
+// ItemContact is a contact summary returned in list responses.
+type ItemContact struct {
+	ID        int    `json:"id"`
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+}
+
 // Item is the list-response shape from /projectitems.
 type Item struct {
-	ID            int    `json:"id"`
-	Name          string `json:"name"`
-	Code          string `json:"code"`
-	ProjectID     int    `json:"projectid"`
-	ProjectTitle  string `json:"projecttitle"`
-	PhaseName     string `json:"phasename"`
-	WorkstageID   int    `json:"activeworkstageid"`
+	ID           int           `json:"id"`
+	Name         string        `json:"name"`
+	Code         string        `json:"code"`
+	ProjectID    int           `json:"projectid"`
+	ProjectTitle string        `json:"projecttitle"`
+	PhaseName    string        `json:"phasename"`
+	WorkstageID  int           `json:"activeworkstageid"`
+	Contacts     []ItemContact `json:"contacts"`
 }
 
 // ItemDetail is the full single-item response from /projectitems/{id}.

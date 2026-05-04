@@ -4,11 +4,23 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"html"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
 )
+
+func unescapeItems(items []Item) {
+	for i := range items {
+		items[i].Name = html.UnescapeString(items[i].Name)
+	}
+}
+
+func unescapeDetail(d *ItemDetail) {
+	d.Name = html.UnescapeString(d.Name)
+	d.ProjectTitle = html.UnescapeString(d.ProjectTitle)
+}
 
 // Client wraps the ProWorkflow v4 API.
 type Client struct {
@@ -106,6 +118,7 @@ func (c *Client) MyItems() ([]Item, error) {
 	if err := c.get("/projectitems", params, &env); err != nil {
 		return nil, err
 	}
+	unescapeItems(env.Data)
 	return env.Data, nil
 }
 
@@ -121,7 +134,67 @@ func (c *Client) ActiveItems() ([]Item, error) {
 	if err := c.get("/projectitems", params, &env); err != nil {
 		return nil, err
 	}
+	unescapeItems(env.Data)
 	return env.Data, nil
+}
+
+// ProjectItems returns active items in a specific project.
+func (c *Client) ProjectItems(projectID int) ([]Item, error) {
+	params := url.Values{
+		"projectid":  {fmt.Sprintf("%d", projectID)},
+		"status":     {"active"},
+		"fields":     {"name,code,phasename,project,workstageid,contacts"},
+		"pagesize":   {"200"},
+		"pagenumber": {"1"},
+	}
+	var env listEnvelope[Item]
+	if err := c.get("/projectitems", params, &env); err != nil {
+		return nil, err
+	}
+	unescapeItems(env.Data)
+	return env.Data, nil
+}
+
+// InboxItems returns active unassigned items in a specific project.
+func (c *Client) InboxItems(projectID int) ([]Item, error) {
+	params := url.Values{
+		"projectid":  {fmt.Sprintf("%d", projectID)},
+		"contacts":   {"unassigned"},
+		"status":     {"active"},
+		"fields":     {"name,code,phasename,project,workstageid"},
+		"pagesize":   {"200"},
+		"pagenumber": {"1"},
+	}
+	var env listEnvelope[Item]
+	if err := c.get("/projectitems", params, &env); err != nil {
+		return nil, err
+	}
+	unescapeItems(env.Data)
+	return env.Data, nil
+}
+
+// SearchItems searches items by name across the account.
+func (c *Client) SearchItems(query string) ([]Item, error) {
+	params := url.Values{
+		"search":     {query},
+		"status":     {"active"},
+		"fields":     {"name,code,phasename,project,workstageid,contacts"},
+		"pagesize":   {"50"},
+		"pagenumber": {"1"},
+	}
+	var env listEnvelope[Item]
+	if err := c.get("/projectitems", params, &env); err != nil {
+		return nil, err
+	}
+	unescapeItems(env.Data)
+	return env.Data, nil
+}
+
+// AssignContact assigns a contact to an item (replaces existing contacts).
+func (c *Client) AssignContact(itemID, contactID int) error {
+	return c.put(fmt.Sprintf("/projectitems/%d", itemID), map[string]any{
+		"contactid": []int{contactID},
+	})
 }
 
 // GetItem fetches a single item by ID (includes uniquetoken).
@@ -130,6 +203,7 @@ func (c *Client) GetItem(id int) (*ItemDetail, error) {
 	if err := c.get(fmt.Sprintf("/projectitems/%d", id), nil, &env); err != nil {
 		return nil, err
 	}
+	unescapeDetail(&env.Data)
 	return &env.Data, nil
 }
 

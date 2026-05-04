@@ -38,5 +38,8 @@ func init() {
 	Root.AddCommand(openCmd)
 	Root.AddCommand(newCmd)
 	Root.AddCommand(initCmd)
+	Root.AddCommand(browseCmd)
+	Root.AddCommand(inboxCmd)
+	Root.AddCommand(searchCmd)
 }
 
