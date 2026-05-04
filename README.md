@@ -107,11 +107,21 @@ pwf completion zsh > /opt/homebrew/share/zsh/site-functions/_pwf
 
 ## Installation
 
-Download the latest binary for your platform from the Bitbucket downloads page, then:
+### macOS (Homebrew)
+
+```sh
+brew tap Proactive-Software/pwf-cli
+brew install pwf
+```
+
+### Manual (macOS / Linux / Windows)
+
+Download the latest archive for your platform from the [releases page](https://github.com/Proactive-Software/pwf-cli/releases), then:
 
 ```sh
 # macOS / Linux
-chmod +x pwf_darwin_arm64/pwf   # or pwf_linux_amd64/pwf etc.
+tar -xzf pwf_darwin_arm64.tar.gz
+chmod +x pwf
 mv pwf /usr/local/bin/pwf
 ```
 
@@ -119,15 +129,17 @@ Run `pwf init` after installing.
 
 ## Releasing
 
-Requires [goreleaser](https://goreleaser.com) and a `GITHUB_TOKEN` (or equivalent) with repo access.
+Tag the commit and push — GitHub Actions handles the rest:
 
 ```sh
 git tag v1.2.3
 git push origin v1.2.3
-goreleaser release --clean
 ```
 
-Produces archives + checksums in `dist/` for: macOS (arm64, amd64), Linux (arm64, amd64), Windows (amd64).
+This triggers the release workflow which:
+- Builds binaries for macOS (arm64, amd64), Linux (arm64, amd64), Windows (amd64)
+- Creates a GitHub release with archives + checksums attached
+- Updates the Homebrew formula in `Proactive-Software/homebrew-pwf-cli`
 
 ## Development
 
