@@ -18,7 +18,7 @@ var startCmd = &cobra.Command{
 The selected item becomes the global active item — shared across all repos.
 
 The active item's uniqueToken is cached at selection time so pwf token
-and the git commit hook work instantly without extra API calls.`,
+works instantly without extra API calls.`,
 	Example: `  pwf start
   pwf start --open    # open in browser immediately after picking`,
 	RunE: func(cmd *cobra.Command, args []string) error {

@@ -1,6 +1,6 @@
 # pwf
 
-Personal ProWorkflow CLI. Gets you to the right place fast without switching to the browser.
+CLI for ProWorkflow — add & select items, move stages, open in browser, and copy uniqueTokens without leaving the terminal.
 
 ## Commands
 
@@ -25,8 +25,8 @@ pwf init
 ```
 
 Prompts for:
-- **API base URL** — e.g. `https://apiv4-local.proworkflow.com/api/v4`
-- **App base URL** — e.g. `https://app-local.proworkflow.com`
+- **API base URL** — e.g. `https://api.proworkflow.com/api/v4`
+- **App base URL** — e.g. `https://app.proworkflow.com`
 - **Subdomain** — e.g. `thom_adv`
 - **OAuth client ID** — registered in common.OAuthClient
 - **OAuth client secret** — registered in common.OAuthClient
@@ -47,9 +47,9 @@ OS keyring                        # OAuth tokens JSON (service: pwf-cli, account
 `config.toml` is safe to edit manually:
 
 ```toml
-api_base = "https://apiv4-local.proworkflow.com/api/v4"
-app_base = "https://app-local.proworkflow.com"
-subdomain = "thom_adv"
+api_base = "https://api.proworkflow.com/api/v4"
+app_base = "https://app.proworkflow.com"
+subdomain = "your_account"
 oauth_client_id = "your-client-id"
 oauth_client_secret = "your-client-secret"
 ```
@@ -148,8 +148,6 @@ cd ~/repos/pwf-cli
 go build -o pwf ./cmd/pwf    # local binary
 go install ./cmd/pwf         # install to ~/go/bin/pwf (on PATH)
 ```
-
-API tested against `https://apiv4-local.proworkflow.com/api/v4`.
 
 ### Project layout
 
