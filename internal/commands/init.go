@@ -6,12 +6,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/pkg/browser"
-	"github.com/spf13/cobra"
 	"github.com/Proactive-Software/pwf-cli/internal/api"
 	"github.com/Proactive-Software/pwf-cli/internal/auth"
 	"github.com/Proactive-Software/pwf-cli/internal/config"
 	"github.com/Proactive-Software/pwf-cli/internal/keyring"
+	"github.com/pkg/browser"
+	"github.com/spf13/cobra"
 )
 
 var initCmd = &cobra.Command{
@@ -34,7 +34,7 @@ var initCmd = &cobra.Command{
 			appBase = "https://app.proworkflow.com"
 		}
 
-		fmt.Print("Account subdomain (e.g. pwfdevwork): ")
+		fmt.Print("Account subdomain (e.g. your_account): ")
 		subdomain, _ := r.ReadString('\n')
 		subdomain = strings.TrimSpace(subdomain)
 
