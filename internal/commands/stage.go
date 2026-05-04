@@ -80,7 +80,7 @@ are synced from the API via 'pwf sync' or 'pwf init'.`,
 		if code == "" {
 			code = fmt.Sprintf("#%d", a.ID)
 		}
-		fmt.Printf("%s → %s\n", codeStyle.Render(code), titleStyle.Render(name))
+		fmt.Printf("%s → %s\n", titleStyle.Render(a.Title), titleStyle.Render(name))
 		return nil
 	},
 }
