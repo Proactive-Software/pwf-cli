@@ -28,7 +28,7 @@ pwf init
 Prompts for:
 - **API base URL** — e.g. `https://api.proworkflow.com/api/v4`
 - **App base URL** — e.g. `https://app.proworkflow.com`
-- **Subdomain** — e.g. `thom_adv`
+- **Subdomain** — e.g. `your_subdomain`
 - **OAuth client ID** — registered in common.OAuthClient
 - **OAuth client secret** — registered in common.OAuthClient
 
