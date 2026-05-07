@@ -124,6 +124,30 @@ The item is assigned to you automatically.`,
 func init() {
 	newCmd.Flags().StringVar(&newPhase, "phase", "", "Phase name (fuzzy matched)")
 	newCmd.Flags().BoolVar(&newPickPhase, "pick-phase", false, "Interactively pick a phase")
+	_ = newCmd.RegisterFlagCompletionFunc("phase", completePhases)
+}
+
+func completePhases(_ *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	a, err := state.Load()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	client, err := newClient()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	phases, err := client.GetPhases(a.ProjectID)
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	q := strings.ToLower(toComplete)
+	var matches []string
+	for _, p := range phases {
+		if toComplete == "" || strings.HasPrefix(strings.ToLower(p.Name), q) {
+			matches = append(matches, p.Name)
+		}
+	}
+	return matches, cobra.ShellCompDirectiveNoFileComp
 }
 
 func pickPhase(phases []api.Phase) (*api.Phase, error) {
