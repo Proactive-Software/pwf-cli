@@ -49,6 +49,8 @@ brews:
     license: "MIT"
     install: |
       bin.install "pwf"
+      output = Utils.safe_popen_read("#{bin}/pwf", "completion", "zsh")
+      (zsh_completion/"_pwf").write output
     test: |
       system "#{bin}/pwf", "--help"
 

@@ -98,15 +98,26 @@ If a stage name is ambiguous (duplicate names with different IDs), the first mat
 
 ## Shell completion
 
-Zsh completions installed at `/opt/homebrew/share/zsh/site-functions/_pwf`.
+Subcommands, flags, workstage names (`pwf stage <TAB>`), and phase names (`pwf new --phase <TAB>`) all complete.
 
-Subcommands, flags, and workstage names (for `pwf stage <TAB>`) all complete.
+**Homebrew:** zsh completion is installed automatically.
 
-To regenerate after updating the binary:
+**Manual setup:**
 
 ```sh
-pwf completion zsh > /opt/homebrew/share/zsh/site-functions/_pwf
+# zsh
+pwf completion zsh > "${fpath[1]}/_pwf"
+
+# bash
+pwf completion bash > /etc/bash_completion.d/pwf
+# or, for current user only:
+pwf completion bash >> ~/.bash_completion
+
+# fish
+pwf completion fish > ~/.config/fish/completions/pwf.fish
 ```
+
+Then restart your shell. No need to re-run after updating the binary — completions are resolved at runtime.
 
 ## Installation
 

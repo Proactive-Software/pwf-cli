@@ -21,7 +21,13 @@ or pass a shell name explicitly.`,
 	Example: `  pwf install-completions
   pwf install-completions zsh
   pwf install-completions bash`,
-	Args: cobra.MaximumNArgs(1),
+	Args:              cobra.MaximumNArgs(1),
+	ValidArgsFunction: func(_ *cobra.Command, args []string, _ string) ([]string, cobra.ShellCompDirective) {
+		if len(args) > 0 {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+		return []string{"zsh", "bash", "fish"}, cobra.ShellCompDirectiveNoFileComp
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		shell := detectShell()
 		if len(args) == 1 {
