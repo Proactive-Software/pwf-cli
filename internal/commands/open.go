@@ -32,6 +32,8 @@ to open the item's parent project instead.`,
 			return err
 		}
 
+		base := appBase(cfg)
+
 		if len(args) == 1 {
 			id, err := strconv.Atoi(args[0])
 			if err != nil {
@@ -45,7 +47,7 @@ to open the item's parent project instead.`,
 			if err != nil {
 				return err
 			}
-			u := itemURL(cfg.AppBase, cfg.Subdomain, detail.ProjectID, detail.ID)
+			u := itemURL(base, cfg.Subdomain, detail.ProjectID, detail.ID)
 			fmt.Println(u)
 			return browser.OpenURL(u)
 		}
@@ -59,12 +61,12 @@ to open the item's parent project instead.`,
 		}
 
 		if openProject {
-			u := projectURL(cfg.AppBase, cfg.Subdomain, a.ProjectID)
+			u := projectURL(base, cfg.Subdomain, a.ProjectID)
 			fmt.Println(u)
 			return browser.OpenURL(u)
 		}
 
-		u := itemURL(cfg.AppBase, cfg.Subdomain, a.ProjectID, a.ID)
+		u := itemURL(base, cfg.Subdomain, a.ProjectID, a.ID)
 		fmt.Println(u)
 		return browser.OpenURL(u)
 	},
