@@ -117,6 +117,20 @@ brew tap Proactive-Software/pwf-cli
 brew install pwf
 ```
 
+### From source (requires Go)
+
+```sh
+git clone https://github.com/Proactive-Software/pwf-cli.git
+cd pwf-cli
+make install   # installs to ~/go/bin/pwf (must be on $PATH)
+```
+
+Or build a local binary without installing:
+
+```sh
+make build     # produces ./pwf
+```
+
 ### Manual (macOS / Linux / Windows)
 
 Download the latest archive for your platform from the [releases page](https://github.com/Proactive-Software/pwf-cli/releases), then:
@@ -147,9 +161,10 @@ This triggers the release workflow which:
 ## Development
 
 ```sh
-cd ~/repos/pwf-cli
-go build -o pwf ./cmd/pwf    # local binary
-go install ./cmd/pwf         # install to ~/go/bin/pwf (on PATH)
+git clone https://github.com/Proactive-Software/pwf-cli.git
+cd pwf-cli
+make build     # local binary at ./pwf
+make install   # install to ~/go/bin/pwf
 ```
 
 ### Project layout
