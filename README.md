@@ -29,8 +29,10 @@ Prompts for:
 - **API base URL** — e.g. `https://api.proworkflow.com/api/v4`
 - **App base URL** — e.g. `https://app.proworkflow.com`
 - **Subdomain** — e.g. `your_subdomain`
-- **OAuth client ID** — registered in common.OAuthClient
-- **OAuth client secret** — registered in common.OAuthClient
+- **OAuth client ID** — your OAuth client credentials
+- **OAuth client secret** — your OAuth client credentials
+
+Contact [support@proworkflow.com](mailto:support@proworkflow.com) if you need help obtaining these.
 
 Then opens a browser for login. After authenticating, tokens are stored in the OS keyring automatically. No manual token handling required.
 
