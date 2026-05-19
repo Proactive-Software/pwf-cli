@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/Proactive-Software/pwf-cli/internal/api"
 	"github.com/Proactive-Software/pwf-cli/internal/config"
 	"github.com/Proactive-Software/pwf-cli/internal/picker"
 	"github.com/Proactive-Software/pwf-cli/internal/state"
+	"github.com/spf13/cobra"
 )
 
 var newPhase string
@@ -91,7 +91,7 @@ The item is assigned to you automatically.`,
 		}
 
 		title := args[0]
-		created, err := client.CreateItem(a.ProjectID, phaseID, int(contactID), title)
+		created, err := client.CreateItem("project", a.ProjectID, phaseID, int(contactID), title)
 		if err != nil {
 			return fmt.Errorf("create item: %w", err)
 		}

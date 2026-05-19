@@ -115,7 +115,7 @@ func (c *Client) MyItems() ([]Item, error) {
 		"pagenumber": {"1"},
 	}
 	var env listEnvelope[Item]
-	if err := c.get("/projectitems", params, &env); err != nil {
+	if err := c.get("/projects/items", params, &env); err != nil {
 		return nil, err
 	}
 	unescapeItems(env.Data)
@@ -131,7 +131,7 @@ func (c *Client) ActiveItems() ([]Item, error) {
 		"pagenumber": {"1"},
 	}
 	var env listEnvelope[Item]
-	if err := c.get("/projectitems", params, &env); err != nil {
+	if err := c.get("/projects/items", params, &env); err != nil {
 		return nil, err
 	}
 	unescapeItems(env.Data)
@@ -148,7 +148,7 @@ func (c *Client) ProjectItems(projectID int) ([]Item, error) {
 		"pagenumber": {"1"},
 	}
 	var env listEnvelope[Item]
-	if err := c.get("/projectitems", params, &env); err != nil {
+	if err := c.get("/projects/items", params, &env); err != nil {
 		return nil, err
 	}
 	unescapeItems(env.Data)
@@ -166,7 +166,7 @@ func (c *Client) InboxItems(projectID int) ([]Item, error) {
 		"pagenumber": {"1"},
 	}
 	var env listEnvelope[Item]
-	if err := c.get("/projectitems", params, &env); err != nil {
+	if err := c.get("/projects/items", params, &env); err != nil {
 		return nil, err
 	}
 	unescapeItems(env.Data)
@@ -183,7 +183,7 @@ func (c *Client) SearchItems(query string) ([]Item, error) {
 		"pagenumber": {"1"},
 	}
 	var env listEnvelope[Item]
-	if err := c.get("/projectitems", params, &env); err != nil {
+	if err := c.get("/projects/items", params, &env); err != nil {
 		return nil, err
 	}
 	unescapeItems(env.Data)
@@ -192,7 +192,7 @@ func (c *Client) SearchItems(query string) ([]Item, error) {
 
 // AssignContact assigns a contact to an item (replaces existing contacts).
 func (c *Client) AssignContact(itemID, contactID int) error {
-	return c.put(fmt.Sprintf("/projectitems/%d", itemID), map[string]any{
+	return c.put(fmt.Sprintf("/projects/items/%d", itemID), map[string]any{
 		"contactid": []int{contactID},
 	})
 }
@@ -200,31 +200,33 @@ func (c *Client) AssignContact(itemID, contactID int) error {
 // GetItem fetches a single item by ID.
 func (c *Client) GetItem(id int) (*ItemDetail, error) {
 	var env singleEnvelope[ItemDetail]
-	if err := c.get(fmt.Sprintf("/projectitems/%d", id), nil, &env); err != nil {
+	if err := c.get(fmt.Sprintf("/projects/items/%d", id), nil, &env); err != nil {
 		return nil, err
 	}
 	unescapeDetail(&env.Data)
 	return &env.Data, nil
 }
 
-
 // SetWorkstage updates the active workstage for an item.
 func (c *Client) SetWorkstage(itemID, workstageID int) error {
-	return c.put(fmt.Sprintf("/projectitems/%d/workstage", itemID), map[string]int{
+	return c.put(fmt.Sprintf("/projects/items/%d/workstage", itemID), map[string]int{
 		"activeworkstageid": workstageID,
 	})
 }
 
-// CreateItem creates a new item in the given project phase.
-func (c *Client) CreateItem(projectID, itemCollectionID, contactID int, name string) (*ItemDetail, error) {
+// CreateItem creates a new item under the given resource.
+// kind must be one of "project", "quote", or "invoice".
+// parentID is the ID of the project, quote, or invoice to create the item under.
+func (c *Client) CreateItem(kind string, parentID, itemCollectionID, contactID int, name string) (*ItemDetail, error) {
 	payload := map[string]any{
 		"name":             name,
+		kind + "id":        parentID,
 		"itemcollectionid": itemCollectionID,
 		"contactid":        []int{contactID},
 		"activeworkstate":  "active",
 	}
 	var env singleEnvelope[ItemDetail]
-	if err := c.post(fmt.Sprintf("/projects/%d/items", projectID), payload, &env); err != nil {
+	if err := c.post(fmt.Sprintf("/%ss/items", kind), payload, &env); err != nil {
 		return nil, err
 	}
 	return &env.Data, nil

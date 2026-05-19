@@ -195,7 +195,7 @@ internal/
 ### API notes
 
 - Auth header: `Authorization: Bearer <token>` (JWT access token from identity server)
-- Items endpoint: `/projectitems` (not `/items`)
+- Items endpoint: `/projects/items` (not `/items`)
 - Workstages: `GET /settings/workstages/item`
 - Pagination required on list endpoints: must pass both `pagesize` and `pagenumber`
 - Item detail (`/projectitems/{id}`) includes `uniquetoken` and `itemcollectionid`
