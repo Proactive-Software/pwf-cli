@@ -198,5 +198,6 @@ internal/
 - Items endpoint: `/projects/items` (not `/items`)
 - Workstages: `GET /settings/workstages/item`
 - Pagination required on list endpoints: must pass both `pagesize` and `pagenumber`
-- Item detail (`/projectitems/{id}`) includes `uniquetoken` and `itemcollectionid`
+- Item detail (`/projects/items/{id}`) includes `uniquetoken` and `itemcollectionid`
+- Item create: `POST /{projects|quotes|invoices}/items` with `{project,quote,invoice}id` in body (not path)
 - No `activeworkstagename` in any response — names resolved locally from workstages.toml
