@@ -173,13 +173,14 @@ func (c *Client) InboxItems(projectID int) ([]Item, error) {
 	return env.Data, nil
 }
 
-// SearchItems searches items by name across the account.
+// SearchItems searches items by name or code across the account.
 func (c *Client) SearchItems(query string) ([]Item, error) {
 	params := url.Values{
-		"search":     {query},
+		"q":          {query},
+		"qfields":    {"name,code"},
+		"qlimit":     {"50"},
 		"status":     {"active"},
 		"fields":     {"name,code,phasename,project,workstageid,contacts"},
-		"pagesize":   {"50"},
 		"pagenumber": {"1"},
 	}
 	var env listEnvelope[Item]
@@ -217,16 +218,13 @@ func (c *Client) SetWorkstage(itemID, workstageID int) error {
 // CreateItem creates a new item under the given resource.
 // kind must be one of "project", "quote", or "invoice".
 // parentID is the ID of the project, quote, or invoice to create the item under.
-func (c *Client) CreateItem(kind string, parentID, itemCollectionID, contactID int, name string) (*ItemDetail, error) {
+func (c *Client) CreateItem(kind string, parentID, itemCollectionID int, name string) (*ItemDetail, error) {
 	payload := map[string]any{
 		"name":             name,
-		kind + "id":        parentID,
 		"itemcollectionid": itemCollectionID,
-		"contactid":        []int{contactID},
-		"activeworkstate":  "active",
 	}
 	var env singleEnvelope[ItemDetail]
-	if err := c.post(fmt.Sprintf("/%ss/items", kind), payload, &env); err != nil {
+	if err := c.post(fmt.Sprintf("/%ss/%d/items", kind, parentID), payload, &env); err != nil {
 		return nil, err
 	}
 	return &env.Data, nil

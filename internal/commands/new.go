@@ -91,9 +91,12 @@ The item is assigned to you automatically.`,
 		}
 
 		title := args[0]
-		created, err := client.CreateItem("project", a.ProjectID, phaseID, int(contactID), title)
+		created, err := client.CreateItem("project", a.ProjectID, phaseID, title)
 		if err != nil {
 			return fmt.Errorf("create item: %w", err)
+		}
+		if err := client.AssignContact(created.ID, int(contactID)); err != nil {
+			return fmt.Errorf("assign contact: %w", err)
 		}
 
 		detail, err := client.GetItem(created.ID)
