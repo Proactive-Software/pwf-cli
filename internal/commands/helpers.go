@@ -9,6 +9,7 @@ import (
 	"github.com/Proactive-Software/pwf-cli/internal/keyring"
 	"github.com/Proactive-Software/pwf-cli/internal/picker"
 	"github.com/Proactive-Software/pwf-cli/internal/state"
+	"github.com/pkg/browser"
 )
 
 func contactSummary(contacts []api.ItemContact) string {
@@ -121,9 +122,17 @@ func newClient() (*api.Client, error) {
 		if cfg.OAuthClientID == "" {
 			return nil, fmt.Errorf("access token expired but no OAuth client configured (run `pwf init`)")
 		}
-		tokens, err = auth.Refresh(cfg.OAuthClientID, cfg.OAuthClientSecret, tokens.RefreshToken)
-		if err != nil {
-			return nil, fmt.Errorf("refresh token: %w — run `pwf init` to re-authenticate", err)
+		refreshed, refreshErr := auth.Refresh(cfg.OAuthClientID, cfg.OAuthClientSecret, tokens.RefreshToken)
+		if refreshErr != nil {
+			// Refresh token dead (rotation interrupted, expired, revoked) —
+			// fall back to a fresh interactive login instead of hard-failing.
+			fmt.Println("Refresh token invalid, re-authenticating via browser...")
+			tokens, err = auth.LoginWithBrowserOpener(cfg.OAuthClientID, cfg.OAuthClientSecret, browser.OpenURL)
+			if err != nil {
+				return nil, fmt.Errorf("re-authenticate: %w — run `pwf init` manually", err)
+			}
+		} else {
+			tokens = refreshed
 		}
 		tokensJSON, err := tokens.Marshal()
 		if err != nil {
