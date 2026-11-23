@@ -42,5 +42,6 @@ func init() {
 	Root.AddCommand(inboxCmd)
 	Root.AddCommand(searchCmd)
 	Root.AddCommand(descCmd)
+	Root.AddCommand(mcpCmd)
 }
 

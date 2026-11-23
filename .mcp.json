@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pwf": {
+      "command": "pwf",
+      "args": ["mcp"]
+    }
+  }
+}

@@ -178,6 +178,17 @@ make build     # local binary at ./pwf
 make install   # install to ~/go/bin/pwf
 ```
 
+## MCP server
+
+The CLI can run as a Model Context Protocol server over stdio:
+
+```sh
+pwf mcp
+```
+
+The repository includes `.mcp.json` for MCP-compatible clients. Install `pwf`
+with `make install` or ensure `pwf` is on `PATH` before starting the client.
+
 ### Project layout
 
 ```
